@@ -35,38 +35,32 @@ limitations under the License.
 
 > Calculate the k-th discrete forward difference of a single-precision complex floating-point strided array.
 
+<section class="installation">
 
+## Installation
+
+```bash
+npm install @stdlib/blas-ext-base-cdiff
+```
+
+Alternatively,
+
+-   To load the package in a website via a `script` tag without installation and bundlers, use the [ES Module][es-module] available on the [`esm`][esm-url] branch (see [README][esm-readme]).
+-   If you are using Deno, visit the [`deno`][deno-url] branch (see [README][deno-readme] for usage intructions).
+-   For use in Observable, or in browser/node environments, use the [Universal Module Definition (UMD)][umd] build available on the [`umd`][umd-url] branch (see [README][umd-readme]).
+
+The [branches.md][branches-url] file summarizes the available branches and displays a diagram illustrating their relationships.
+
+To view installation and usage instructions specific to each branch build, be sure to explicitly navigate to the respective README files on each branch, as linked to above.
+
+</section>
 
 <section class="usage">
 
 ## Usage
 
-To use in Observable,
-
 ```javascript
-cdiff = require( 'https://cdn.jsdelivr.net/gh/stdlib-js/blas-ext-base-cdiff@umd/browser.js' )
-```
-
-To vendor stdlib functionality and avoid installing dependency trees for Node.js, you can use the UMD server build:
-
-```javascript
-var cdiff = require( 'path/to/vendor/umd/blas-ext-base-cdiff/index.js' )
-```
-
-To include the bundle in a webpage,
-
-```html
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/stdlib-js/blas-ext-base-cdiff@umd/browser.js"></script>
-```
-
-If no recognized module system is present, access bundle contents via the global scope:
-
-```html
-<script type="text/javascript">
-(function () {
-    window.cdiff;
-})();
-</script>
+var cdiff = require( '@stdlib/blas-ext-base-cdiff' );
 ```
 
 <!-- lint disable maximum-heading-length -->
@@ -217,15 +211,10 @@ cdiff.ndarray( 3, 1, x, 1, x.length-3, 1, p, 1, 0, 1, a, 1, 0, out, 1, 0, w, 1, 
 
 <!-- eslint no-undef: "error" -->
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<body>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/stdlib-js/random-array-discrete-uniform@umd/browser.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/stdlib-js/array-complex64@umd/browser.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/stdlib-js/blas-ext-base-cdiff@umd/browser.js"></script>
-<script type="text/javascript">
-(function () {
+```javascript
+var discreteUniform = require( '@stdlib/random-array-discrete-uniform' );
+var Complex64Array = require( '@stdlib/array-complex64' );
+var cdiff = require( '@stdlib/blas-ext-base-cdiff' );
 
 var xbuf = discreteUniform( 20, -100, 100, {
     'dtype': 'float32'
@@ -250,11 +239,6 @@ var w = new Complex64Array( 13 );
 
 cdiff( x.length, 4, x, 1, 2, p, 1, 2, a, 1, out, 1, w, 1 );
 console.log( 'Output: ', out );
-
-})();
-</script>
-</body>
-</html>
 ```
 
 </section>
@@ -263,7 +247,173 @@ console.log( 'Output: ', out );
 
 <!-- C interface documentation. -->
 
+* * *
 
+<section class="c">
+
+## C APIs
+
+<!-- Section to include introductory text. Make sure to keep an empty line after the intro `section` element and another before the `/section` close. -->
+
+<section class="intro">
+
+</section>
+
+<!-- /.intro -->
+
+<!-- C usage documentation. -->
+
+<section class="usage">
+
+### Usage
+
+```c
+#include "stdlib/blas/ext/base/cdiff.h"
+```
+
+<!-- lint disable maximum-heading-length -->
+
+#### stdlib_strided_cdiff( N, k, \*X, strideX, N1, \*Prepend, strideP, N2, \*Append, strideA, \*Out, strideOut, \*Workspace, strideW )
+
+<!-- lint enable maximum-heading-length -->
+
+Calculates the k-th discrete forward difference of a single-precision complex floating-point strided array.
+
+```c
+#include "stdlib/complex/float32/ctor.h"
+
+const float x[] = { 2.0f, -2.0f, 4.0f, -4.0f, 6.0f, -6.0f, 8.0f, -8.0f, 10.0f, -10.0f };
+const float p[] = { 1.0f, -1.0f };
+const float a[] = { 11.0f, -11.0f };
+float out[] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+float w[] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+
+stdlib_strided_cdiff( 5, 1, (const stdlib_complex64_t *)x, 1, 1, (const stdlib_complex64_t *)p, 1, 1, (const stdlib_complex64_t *)a, 1, (stdlib_complex64_t *)out, 1, (stdlib_complex64_t *)w, 1 );
+```
+
+The function accepts the following arguments:
+
+-   **N**: `[in] CBLAS_INT` number of indexed elements.
+-   **k**: `[in] CBLAS_INT` number of times to recursively compute differences.
+-   **X**: `[in] stdlib_complex64_t*` input array.
+-   **strideX**: `[in] CBLAS_INT` stride length for `X`.
+-   **N1**: `[in] CBLAS_INT` number of indexed elements for `Prepend`.
+-   **Prepend**: `[in] stdlib_complex64_t*` array containing values to prepend prior to computing differences.
+-   **strideP**: `[in] CBLAS_INT` stride length for `Prepend`.
+-   **N2**: `[in] CBLAS_INT` number of indexed elements for `Append`.
+-   **Append**: `[in] stdlib_complex64_t*` array containing values to append prior to computing differences.
+-   **strideA**: `[in] CBLAS_INT` stride length for `Append`.
+-   **Out**: `[out] stdlib_complex64_t*` output array. Must have `N + N1 + N2 - k` elements.
+-   **strideOut**: `[in] CBLAS_INT` stride length for `Out`.
+-   **Workspace**: `[out] stdlib_complex64_t*` workspace array. Must have `N + N1 + N2 - 1` elements.
+-   **strideW**: `[in] CBLAS_INT` stride length for `Workspace`.
+
+```c
+void stdlib_strided_cdiff( const CBLAS_INT N, const CBLAS_INT k, const stdlib_complex64_t *X, const CBLAS_INT strideX, const CBLAS_INT N1, const stdlib_complex64_t *Prepend, const CBLAS_INT strideP, const CBLAS_INT N2, const stdlib_complex64_t *Append, const CBLAS_INT strideA, stdlib_complex64_t *Out, const CBLAS_INT strideOut, stdlib_complex64_t *Workspace, const CBLAS_INT strideW );
+```
+
+<!-- lint disable maximum-heading-length -->
+
+#### stdlib_strided_cdiff_ndarray( N, k, \*X, strideX, offsetX, N1, \*Prepend, strideP, offsetP, N2, \*Append, strideA, offsetA, \*Out, strideOut, offsetOut, \*Workspace, strideW, offsetW )
+
+<!-- lint enable maximum-heading-length -->
+
+Calculates the k-th discrete forward difference of a single-precision complex floating-point strided array using alternative indexing semantics.
+
+```c
+#include "stdlib/complex/float32/ctor.h"
+
+const float x[] = { 2.0f, -2.0f, 4.0f, -4.0f, 6.0f, -6.0f, 8.0f, -8.0f, 10.0f, -10.0f };
+const float p[] = { 1.0f, -1.0f };
+const float a[] = { 11.0f, -11.0f };
+float out[] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+float w[] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+
+stdlib_strided_cdiff_ndarray( 5, 1, (const stdlib_complex64_t *)x, 1, 0, 1, (const stdlib_complex64_t *)p, 1, 0, 1, (const stdlib_complex64_t *)a, 1, 0, (stdlib_complex64_t *)out, 1, 0, (stdlib_complex64_t *)w, 1, 0 );
+```
+
+The function accepts the following arguments:
+
+-   **N**: `[in] CBLAS_INT` number of indexed elements.
+-   **k**: `[in] CBLAS_INT` number of times to recursively compute differences.
+-   **X**: `[in] stdlib_complex64_t*` input array.
+-   **strideX**: `[in] CBLAS_INT` stride length for `X`.
+-   **offsetX**: `[in] CBLAS_INT` starting index for `X`.
+-   **N1**: `[in] CBLAS_INT` number of indexed elements for `Prepend`.
+-   **Prepend**: `[in] stdlib_complex64_t*` array containing values to prepend prior to computing differences.
+-   **strideP**: `[in] CBLAS_INT` stride length for `Prepend`.
+-   **offsetP**: `[in] CBLAS_INT` starting index for `Prepend`.
+-   **N2**: `[in] CBLAS_INT` number of indexed elements for `Append`.
+-   **Append**: `[in] stdlib_complex64_t*` array containing values to append prior to computing differences.
+-   **strideA**: `[in] CBLAS_INT` stride length for `Append`.
+-   **offsetA**: `[in] CBLAS_INT` starting index for `Append`.
+-   **Out**: `[out] stdlib_complex64_t*` output array. Must have `N + N1 + N2 - k` elements.
+-   **strideOut**: `[in] CBLAS_INT` stride length for `Out`.
+-   **offsetOut**: `[in] CBLAS_INT` starting index for `Out`.
+-   **Workspace**: `[out] stdlib_complex64_t*` workspace array. Must have `N + N1 + N2 - 1` elements.
+-   **strideW**: `[in] CBLAS_INT` stride length for `Workspace`.
+-   **offsetW**: `[in] CBLAS_INT` starting index for `Workspace`.
+
+```c
+void stdlib_strided_cdiff_ndarray( const CBLAS_INT N, const CBLAS_INT k, const stdlib_complex64_t *X, const CBLAS_INT strideX, const CBLAS_INT offsetX, const CBLAS_INT N1, const stdlib_complex64_t *Prepend, const CBLAS_INT strideP, const CBLAS_INT offsetP, const CBLAS_INT N2, const stdlib_complex64_t *Append, const CBLAS_INT strideA, const CBLAS_INT offsetA, stdlib_complex64_t *Out, const CBLAS_INT strideOut, const CBLAS_INT offsetOut, stdlib_complex64_t *Workspace, const CBLAS_INT strideW, const CBLAS_INT offsetW );
+```
+
+</section>
+
+<!-- /.usage -->
+
+<!-- C API usage notes. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="notes">
+
+</section>
+
+<!-- /.notes -->
+
+<!-- C API usage examples. -->
+
+<section class="examples">
+
+### Examples
+
+```c
+#include "stdlib/blas/ext/base/cdiff.h"
+#include "stdlib/complex/float32/ctor.h"
+#include <stdio.h>
+
+int main( void ) {
+    // Create a strided array of interleaved real and imaginary components:
+    const float x[] = { 1.0f, -1.0f, 2.0f, -2.0f, 3.0f, -3.0f, 4.0f, -4.0f };
+
+    // Define a list of values to prepend:
+    const float p[] = { 0.0f, 0.0f };
+
+    // Define a list of values to append:
+    const float a[] = { 5.0f, -5.0f };
+
+    // Define an output array:
+    float out[] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+
+    // Define a workspace:
+    float w[] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+
+    // Compute forward differences:
+    stdlib_strided_cdiff( 4, 1, (const stdlib_complex64_t *)x, 1, 1, (const stdlib_complex64_t *)p, 1, 1, (const stdlib_complex64_t *)a, 1, (stdlib_complex64_t *)out, 1, (stdlib_complex64_t *)w, 1 );
+
+    // Print the result:
+    for ( int i = 0; i < 10; i++ ) {
+        printf( "out[ %i ] = %f\n", i, out[ i ] );
+    }
+}
+```
+
+</section>
+
+<!-- /.examples -->
+
+</section>
+
+<!-- /.c -->
 
 <!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
 
@@ -345,7 +495,7 @@ Copyright &copy; 2016-2026. The Stdlib [Authors][stdlib-authors].
 
 [stdlib-license]: https://raw.githubusercontent.com/stdlib-js/blas-ext-base-cdiff/main/LICENSE
 
-[@stdlib/array/complex64]: https://github.com/stdlib-js/array-complex64/tree/umd
+[@stdlib/array/complex64]: https://github.com/stdlib-js/array-complex64
 
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
